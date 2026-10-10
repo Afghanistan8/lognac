@@ -1,0 +1,69 @@
+{
+  "id": "CASE-UK-001",
+  "synthetic": true,
+  "jurisdiction": "England, UK",
+  "patient": {
+    "id": "SYN-1042",
+    "name": "Amira Okafor",
+    "age": 47,
+    "conditions": [
+      { "id": "C-HYP", "label": "Hypertension", "status": "active", "recordedAt": "2026-06-10T09:00:00Z", "sourceId": "DOC-HISTORY" },
+      { "id": "C-INF", "label": "Respiratory infection", "status": "active", "recordedAt": "2026-10-08T12:00:00Z", "sourceId": "DOC-DISCHARGE" }
+    ],
+    "allergies": [
+      { "id": "A-PEN", "ingredient": "amoxicillin", "class": "penicillin", "reaction": "hives", "status": "confirmed", "recordedAt": "2023-04-12T10:00:00Z", "sourceId": "DOC-ALLERGY" }
+    ]
+  },
+  "documents": [
+    { "id": "DOC-HISTORY", "title": "Medication history", "kind": "history", "recordedAt": "2026-10-08T09:15:00Z", "excerpt": "Hypertension; patient reports amlodipine 5 mg daily and a recently purchased HEALMOXY pack." },
+    { "id": "DOC-ALLERGY", "title": "Allergy record", "kind": "allergy", "recordedAt": "2026-10-08T09:16:00Z", "excerpt": "Confirmed amoxicillin allergy. Reported reaction: hives." },
+    { "id": "DOC-HOSPITAL", "title": "Inpatient medication orders", "kind": "hospital", "recordedAt": "2026-10-08T12:05:00Z", "excerpt": "Amlodipine 5 mg daily; doxycycline 100 mg twice daily during admission." },
+    { "id": "DOC-DISCHARGE", "title": "Draft discharge orders", "kind": "discharge", "recordedAt": "2026-10-09T09:00:00Z", "excerpt": "Amlodipine 5 mg daily, seven-day supply; amoxicillin 500 mg three times daily. Review in 14 days." },
+    { "id": "DOC-INSTRUCTIONS", "title": "Draft patient instructions", "kind": "instructions", "recordedAt": "2026-10-09T09:20:00Z", "excerpt": "Take amlodipine 10 mg daily and amoxicillin 500 mg three times daily." },
+    { "id": "DOC-PACK", "title": "Patient-reported medicine pack", "kind": "pack", "recordedAt": "2026-10-08T09:20:00Z", "excerpt": "HEALMOXY 500 mg capsules, batch 023011, obtained in Cameroon." },
+    { "id": "DOC-CAREPLAN", "title": "Discharge care plan", "kind": "careplan", "recordedAt": "2026-10-09T09:30:00Z", "excerpt": "Responsible team: respiratory follow-up clinic. Review scheduled 23 October 2026, 10:00 BST." }
+  ],
+  "homeMedications": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "status": "active", "sourceId": "DOC-HISTORY" },
+    { "id": "M-HEAL", "name": "HEALMOXY", "ingredient": "amoxicillin", "strength": "500 mg", "dose": "500 mg", "route": "oral", "frequency": "as recorded on pack", "status": "patient-reported", "batch": "023011", "obtainedIn": "Cameroon", "sourceId": "DOC-PACK" }
+  ],
+  "hospitalOrders": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "indicationId": "C-HYP", "sourceId": "DOC-HOSPITAL" },
+    { "id": "M-DOXY", "name": "Doxycycline", "ingredient": "doxycycline", "strength": "100 mg", "dose": "100 mg", "route": "oral", "frequency": "twice daily", "indicationId": "C-INF", "sourceId": "DOC-HOSPITAL" }
+  ],
+  "dischargeOrders": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "indicationId": "C-HYP", "ongoing": true, "supplyDays": 7, "sourceId": "DOC-DISCHARGE" },
+    { "id": "M-AMOX", "name": "Amoxicillin", "ingredient": "amoxicillin", "strength": "500 mg", "dose": "500 mg", "route": "oral", "frequency": "three times daily", "indicationId": "C-INF", "ongoing": false, "supplyDays": 5, "sourceId": "DOC-DISCHARGE" }
+  ],
+  "patientInstructions": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "10 mg", "route": "oral", "frequency": "once daily", "sourceId": "DOC-INSTRUCTIONS" },
+    { "id": "M-AMOX", "name": "Amoxicillin", "ingredient": "amoxicillin", "strength": "500 mg", "dose": "500 mg", "route": "oral", "frequency": "three times daily", "sourceId": "DOC-INSTRUCTIONS" }
+  ],
+  "followUp": {
+    "owner": "Respiratory follow-up clinic",
+    "dueAt": "2026-10-23T09:00:00Z",
+    "timeZone": "Europe/London",
+    "sourceId": "DOC-CAREPLAN",
+    "acknowledged": false
+  },
+  "alerts": [
+    {
+      "id": "WHO-2-2025-HEALMOXY",
+      "issuer": "WHO",
+      "title": "Medical Product Alert N°2/2025: falsified HEALMOXY 500 mg capsules",
+      "product": "HEALMOXY",
+      "strength": "500 mg",
+      "batches": ["023011", "H02605"],
+      "identifiedIn": ["Cameroon", "Central African Republic"],
+      "issuedAt": "2025-04-23T00:00:00Z",
+      "url": "https://www.who.int/vanuatu/news/detail-global/23-04-2025-medical-product-alert-n-2-2025--falsified-healmoxy-%28amoxicillin%29-capsules-500mg"
+    }
+  ],
+  "reviewer": null,
+  "decisions": {},
+  "findings": [],
+  "events": [],
+  "report": null,
+  "notification": null,
+  "phase": "new"
+}

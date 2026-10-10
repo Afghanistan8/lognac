@@ -1,0 +1,19 @@
+{
+  "name": "lognac",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "demo": "node src/demo.js"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "dependencies": {
+    "neatlogs": "1.1.28",
+    "nodemailer": "^10.1.0",
+    "openai": "^6.34.0"
+  }
+}

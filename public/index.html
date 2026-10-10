@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b21">
+  <title>Lognac — discharge review</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">✳</span><span>lognac<span class="brand-dot">.</span></span></div>
+      <div class="sidebar-kicker">CLINICAL WORKSPACE</div>
+      <nav aria-label="Workspace">
+        <a class="nav-item active" href="#case"><span>◫</span> Case review</a>
+        <a class="nav-item" href="#findings"><span>◇</span> Safety findings</a>
+        <a class="nav-item" href="#report"><span>≡</span> Written report</a>
+        <a class="nav-item" href="#followup"><span>◷</span> Follow-up</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="demo-chip"><span class="live-dot"></span> Synthetic demonstration</div>
+        <p>Fictional records only. Clinical decisions in this demo are simulated.</p>
+        <a href="https://www.who.int/teams/regulation-prequalification/incidents-and-SF/full-list-of-who-medical-product-alerts" target="_blank" rel="noreferrer">WHO product alerts ↗</a>
+      </div>
+    </aside>
+
+    <main class="main" id="case">
+      <header class="topbar">
+        <div><span class="crumb">Workspace</span><span class="slash">/</span><span>Discharge review</span></div>
+        <div class="top-actions"><span class="environment-tag">UK DEMO</span><button id="graph-toggle" class="btn ghost" type="button">View evidence graph <span>↗</span></button></div>
+      </header>
+      <div class="content">
+        <div class="page-intro">
+          <div class="eyebrow">MEDICATION SAFETY · CASE 001</div>
+          <h1>Make the handoff<br><em>make sense.</em></h1>
+          <p>One written view of a patient's medication history, discharge changes, safety evidence and follow-up. Every concern stays open until a clinician records a decision.</p>
+        </div>
+        <div id="notice" role="status" aria-live="polite"></div>
+        <div id="case-content">Loading case…</div>
+      </div>
+    </main>
+  </div>
+
+  <div id="graph-panel" class="graph-panel" hidden>
+    <div class="graph-header"><div><div class="eyebrow">OPTIONAL VIEW</div><h2>Evidence graph</h2><p>Follow each medicine across stages. Pale red nodes preserve original drafts; click any node for its source.</p></div><button id="graph-close" class="icon-button" type="button" aria-label="Close evidence graph">×</button></div>
+    <div id="graph-canvas" class="graph-canvas"></div>
+    <div id="graph-detail" class="graph-detail">Select a node to inspect its evidence.</div>
+  </div>
+</body>
+</html>
