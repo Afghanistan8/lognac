@@ -21,7 +21,7 @@ npm run demo
 npm run demo -- --failure
 ```
 
-The second command simulates one alert-source timeout, retries the required check and records recovery. The browser's **Show failure recovery** button runs the same path after reset. State is saved in `.local/case.json`, which is ignored by Git.
+The second command simulates one alert-source timeout, retries the required check and records recovery. With `NEATLOGS_API_KEY` configured, the terminal demo prints its exact trace ID and records the review, simulated decisions, final consistency gate and due-time reminder under one workflow trace. Verify that ID in Neatlogs; printing it does not prove hosted finalization. The browser's **Show failure recovery** button runs the same review path after reset. State is saved in `.local/case.json`, which is ignored by Git.
 
 ## Walkthrough
 
