@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "node --test",
-    "demo": "node src/demo.js"
+    "demo": "node src/demo.js",
+    "demo:http": "node src/httpDemo.js"
   },
   "engines": {
     "node": ">=20.12"

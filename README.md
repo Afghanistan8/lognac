@@ -39,10 +39,20 @@ Copy `.env.example` to `.env` and fill only the settings you use. `.env` is Git-
 | --- | --- |
 | `NEATLOGS_API_KEY` | Trace the agent workflow, tool calls and optional model planner in neatlogs. |
 | `NEATLOGS_ENDPOINT` | Set to `https://eu.ingest.neatlogs.com` only for a Neatlogs EU project. |
+| `NEATLOGS_WRITE_KEY`, `NEATLOGS_PROJECT_NAME` | Optional independent JSON trace route. Use an `nlw_` write key and the exact Neatlogs project name. |
 | `MODEL_API_KEY`, `MODEL_NAME`, `MODEL_BASE_URL` | OpenAI-compatible model to choose the next required review tool. The controller still enforces all required checks. |
 | `ALLOWED_DEMO_EMAIL`, `SMTP_*` | Send only synthetic report/reminder email to one exact test address. |
 
 The planner fallback is deterministic if no model is configured or a model call fails. The clinical checks are deterministic in both modes. **Do not place real patient data or credentials in the repository or in Neatlogs traces.**
+
+If the SDK's OTLP trace is received but cannot be finalized in Neatlogs, a separate official JSON route is available for the fictional demo:
+
+```powershell
+npm run demo:http -- --dry-run --failure
+npm run demo:http -- --failure
+```
+
+The first command builds a trace locally without sending it. The second posts the actual simulated run's event trail to Neatlogs with the write key. It prints a trace ID; **a successful HTTP receipt is not proof that Neatlogs finalized it**. Open that exact trace in the dashboard and verify its tool, simulated error, retry, decision and verification spans. This alternate route remains unverified until such a dashboard check succeeds. Do not disable project PII controls just to make a trace appear.
 
 ## Architecture
 
