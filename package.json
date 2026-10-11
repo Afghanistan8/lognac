@@ -7,7 +7,8 @@
     "start": "node src/server.js",
     "test": "node --test",
     "demo": "node src/demo.js",
-    "demo:http": "node src/httpDemo.js"
+    "demo:http": "node src/httpDemo.js",
+    "demo:minimal-trace": "node src/minimalTraceDemo.js"
   },
   "engines": {
     "node": ">=20.12"
