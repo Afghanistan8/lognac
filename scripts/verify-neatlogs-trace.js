@@ -24,6 +24,11 @@ console.log(JSON.stringify({
   projectId: data?.projectId ?? null,
   name: data?.name ?? null,
   status: data?.status ?? null,
+  latency: data?.latency ?? null,
+  llmCalls: data?.llmCalls ?? null,
+  toolCalls: data?.toolCalls ?? null,
+  hasError: data?.hasError ?? null,
+  totalCost: data?.totalCost ?? null,
   message: data?.message ?? null,
   finalizationStatus: data?.finalizationStatus ?? data?.trace?.finalizationStatus ?? null,
   ingestionDiagnostics: diagnostics ? {

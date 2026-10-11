@@ -1,0 +1,13 @@
+# Neatlogs workflow evidence
+
+Project: `lognac` (`1fe23c4c-8166-4723-b508-1731c35ffaf7`). The traces below were sent from Lognac's synthetic UK case on October 11, 2026 and verified through Neatlogs' authenticated trace read API, not inferred from a local flush receipt. They contain fictional records only.
+
+| Run | Trace | Hosted result | Observed work |
+| --- | --- | --- | --- |
+| Clean model-planned review | [`cec351d705537bdc7b1895614c6ed864`](https://app.neatlogs.com/traces/cec351d705537bdc7b1895614c6ed864?orgId=b25f84a0-5cac-4903-9546-23c190cb91dd&projectId=1fe23c4c-8166-4723-b508-1731c35ffaf7) | HTTP 200, `status: success`, 17 spans, 3 LLM calls, 3 tool calls, 4,187 ms | Four source-backed findings, four simulated clinician decisions, verified written report, timed follow-up, 25 graph nodes and 29 source links. |
+| Injected safety-source timeout and retry | [`d696663b44f3551223c90f6308fad8df`](https://app.neatlogs.com/traces/d696663b44f3551223c90f6308fad8df?orgId=b25f84a0-5cac-4903-9546-23c190cb91dd&projectId=1fe23c4c-8166-4723-b508-1731c35ffaf7) | HTTP 200, `status: error`, 18 spans, 3 LLM calls, 4 tool calls, 4,529 ms | The injected `checkAlerts` failure is recorded, the controller retries it, and the application still finalizes the four-decision report. The trace includes one intentionally failed tool span and Neatlogs marks the overall trace `error`. |
+| Four-span end-to-end control | [`052b77557d5c77473c93c4898faf599c`](https://app.neatlogs.com/traces/052b77557d5c77473c93c4898faf599c?orgId=b25f84a0-5cac-4903-9546-23c190cb91dd&projectId=1fe23c4c-8166-4723-b508-1731c35ffaf7) | HTTP 200, `status: success`, 4 spans | Actual synthetic source review, four decisions, report verification and reminder check with the validated local planner. |
+
+Run `npm run demo` for the clean model-planned workflow or `npm run demo -- --failure` to inject one retryable safety-source timeout. With the ignored `.env` configured, each run prints its trace ID. Read back an exact trace with `node scripts/verify-neatlogs-trace.js <trace-id>`; the verifier prints status and safe counts, never credentials or clinical content.
+
+The clean and recovery runs completed the same synthetic case. The retry added one tool call and 342 ms of observed latency in these two samples. These are demo observations, not a statistically supported performance comparison. Earlier traces failed hosted processing even though local capture and flush passed; the official Doctor control also timed out once, then later finalized. The verified clean trace above is the primary Neatlogs submission evidence.

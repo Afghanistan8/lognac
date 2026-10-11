@@ -83,6 +83,6 @@ Exact text matching and one fictional case cannot establish clinical correctness
 
 ## neatHack evidence
 
-The [neatHack rules](https://neatlogs.com/hackathon) require neatlogs, Entire and cfo.ai. Neatlogs instrumentation is in `src/agent.js`; the `--failure` demo produces a recovery event. Entire project settings and Codex hooks are under `.entire/` and `.codex/`. The draft economics and evidence checklist are in `docs/`. The repository includes [Entire graph output](docs/ENTIRE_GRAPH_EVIDENCE.md) and a [screenshot of the actual cfo.ai business plan](docs/CFO_AI_EVIDENCE.md). A successful hosted Lognac workflow trace remains unverified; a printed trace ID is not proof of finalization.
+The [neatHack rules](https://neatlogs.com/hackathon) require neatlogs, Entire and cfo.ai. Neatlogs instrumentation is in `src/agent.js`; the `--failure` demo produces a recovery event. Entire project settings and Codex hooks are under `.entire/` and `.codex/`. The draft economics and evidence checklist are in `docs/`. The repository includes [verified hosted Lognac workflow traces](docs/NEATLOGS_EVIDENCE.md), [Entire graph output](docs/ENTIRE_GRAPH_EVIDENCE.md), a [screenshot of the actual cfo.ai business plan](docs/CFO_AI_EVIDENCE.md), and a [white product card for X](docs/social/lognac-neathack.png). The clean model-planned Neatlogs trace finalized successfully with 17 spans; the recovery trace separately records an intentional failed tool and completed application retry.
 
 Project owner and Git commit identity: **Afghanistan8**.
