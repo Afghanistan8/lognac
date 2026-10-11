@@ -37,11 +37,11 @@ async function observed(kind, name, work) {
   return trace({ kind, name, captureInput: false, captureOutput: false }, work);
 }
 
-async function chooseTool(remaining, outcomes, events) {
-  if (!modelClient) return remaining[0];
+async function chooseTool(remaining, outcomes, events, planner) {
+  if (!planner) return { name: remaining[0], modelSelected: false };
   try {
     const completion = await observed('AGENT', 'choose_next_review_tool', () =>
-      modelClient.chat.completions.create({
+      planner.chat.completions.create({
         model: process.env.MODEL_NAME,
         temperature: 0,
         messages: [
@@ -50,15 +50,15 @@ async function chooseTool(remaining, outcomes, events) {
         ]
       }));
     const choice = String(completion.choices?.[0]?.message?.content ?? '').trim();
-    if (remaining.includes(choice)) return choice;
+    if (remaining.includes(choice)) return { name: choice, modelSelected: true };
     events.push({ at: new Date().toISOString(), kind: 'recovery', text: 'Planner returned an invalid tool; controller selected the next required tool.' });
   } catch {
     events.push({ at: new Date().toISOString(), kind: 'recovery', text: 'Planner was unavailable; controller continued with the validated required tools.' });
   }
-  return remaining[0];
+  return { name: remaining[0], modelSelected: false };
 }
 
-export async function runReview(caseFile, { injectFailure = false } = {}) {
+export async function runReview(caseFile, { injectFailure = false, planner = modelClient } = {}) {
   if (!caseFile.synthetic) throw new Error('This prototype accepts synthetic cases only.');
   if (caseFile.phase !== 'new') return caseFile;
   return observed('WORKFLOW', 'discharge_review', async () => {
@@ -72,8 +72,10 @@ export async function runReview(caseFile, { injectFailure = false } = {}) {
       patientInstructions: structuredClone(caseFile.patientInstructions)
     };
     let failedOnce = false;
+    let modelPlanned = true;
     while (remaining.length) {
-      const name = await chooseTool(remaining, outcomes, events);
+      const { name, modelSelected } = await chooseTool(remaining, outcomes, events, planner);
+      modelPlanned &&= modelSelected;
       let result;
       try {
         result = await observed('TOOL', name, () => {
@@ -96,7 +98,7 @@ export async function runReview(caseFile, { injectFailure = false } = {}) {
     caseFile.findings = findings;
     caseFile.events = events;
     caseFile.phase = findings.length ? 'awaiting_clinician' : 'ready_to_finalize';
-    caseFile.agentMode = modelClient ? 'model-planned' : 'validated-local-planner';
+    caseFile.agentMode = modelPlanned ? 'model-planned' : 'validated-local-planner';
     return caseFile;
   });
 }
