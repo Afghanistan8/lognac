@@ -10,7 +10,7 @@ The [official neatHack page](https://neatlogs.com/hackathon) asks for a public r
 | neatlogs trace of the retry/recovery run | Blocked by hosted processing failure | `npm run demo -- --failure` emitted `8264da2faf2b5ad8a2bfab1f7ac02aee`; hosted readback returned HTTP 409 `finalizationStatus: dlq` |
 | Before/after measurable improvement | Pending two successful saved workflow traces | Compare finding coverage, retry completion, duration and cost; report actual numbers |
 | Entire checkpoint or graph output | Graph output complete; checkpoint absent | Official Entire graph plugin output and reproduction steps: `docs/ENTIRE_GRAPH_EVIDENCE.md`. Seven Codex hooks are trusted, but `entire checkpoint list` still returned zero checkpoints. |
-| cfo.ai business plan | Actual plan screenshot captured; share/export pending | `docs/CFO_AI_EVIDENCE.md` records the cfo.ai three-case plan, 12-month cash comparison and checked calculations. The screenshot is in `docs/evidence/cfo-ai-lognac-plan.png`. |
+| cfo.ai business plan | Complete: shared plan and screenshot verified | [Live cfo.ai plan](https://cfo.ai/s/DfJNW9w_YPYeVpGJ); `docs/CFO_AI_EVIDENCE.md` records the three-case plan, 12-month cash comparison and checked calculations. The screenshot is in `docs/evidence/cfo-ai-lognac-plan.png`. |
 | Public build update tagged `#neatHack` | Pending owner post | Add link |
 | Video covering all three partner tools | Pending recording | Add link; show architecture, failure recovery, written result, graph, traces, checkpoint and finance plan |
 | Official X quote-post submission | Pending October 12 submission window | Add published link |
