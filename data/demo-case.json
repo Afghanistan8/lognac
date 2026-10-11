@@ -53,10 +53,10 @@
       "title": "Medical Product Alert N°2/2025: falsified HEALMOXY 500 mg capsules",
       "product": "HEALMOXY",
       "strength": "500 mg",
-      "batches": ["023011", "H02605"],
+      "batches": ["023011", "H02605", "H026051"],
       "identifiedIn": ["Cameroon", "Central African Republic"],
       "issuedAt": "2025-04-23T00:00:00Z",
-      "url": "https://www.who.int/vanuatu/news/detail-global/23-04-2025-medical-product-alert-n-2-2025--falsified-healmoxy-%28amoxicillin%29-capsules-500mg"
+      "url": "https://cdn.who.int/media/docs/default-source/substandard-and-falsified/n2_2025_healmoxy_en.pdf?sfvrsn=d17da686_4"
     }
   ],
   "reviewer": null,

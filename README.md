@@ -25,7 +25,7 @@ The second command simulates one alert-source timeout, retries the required chec
 
 ## Walkthrough
 
-1. Run the agent review. It detects the amlodipine instruction mismatch, an amoxicillin allergy conflict, a reported HEALMOXY batch matching a WHO alert, and a chronic medicine supply gap before the documented follow-up.
+1. Run the agent review. It detects the amlodipine instruction mismatch, an amoxicillin allergy conflict, a reported HEALMOXY batch matching a WHO alert, and a chronic medicine supply gap before the documented follow-up. It also flags an active home medicine omitted from discharge or a reported alert product whose batch is unknown in variant synthetic cases.
 2. Enter a **simulated** reviewer name and a decision reason for every finding. The replacement selector offers only a prior hospital order linked to the same recorded condition; it does not decide treatment.
 3. Verify and finalize. Lognac runs the checks again and refuses to produce a final report while a discrepancy remains.
 4. Read or download the timestamped report. Open **View evidence graph** for a side view of sources, medicine stages, findings and decisions.
@@ -69,12 +69,12 @@ flowchart LR
   Review -. optional traces .-> Neatlogs[neatlogs]
 ```
 
-The case is stored as JSON for the demonstration. The controller can let a model choose the order of required tools, but the model cannot remove a required tool, clear a finding or select a medicine. A timeout of the safety check triggers one retry and an audit event. Decisions update drafts and preserve source IDs and timestamps. Finalization checks that instructions match orders and that all seeded safety findings are resolved.
+The case is stored as JSON for the demonstration. The controller can let a model choose the order of required tools, but the model cannot remove a required tool, clear a finding or select a medicine. A timeout of the safety check triggers one retry and an audit event. Decisions update drafts and preserve source IDs and timestamps. Finalization checks that instructions match orders, source citations and decision records exist, and all seeded safety findings are resolved.
 
 ## Safety scope and source provenance
 
 - The [AHRQ MATCH toolkit](https://www.ahrq.gov/patient-safety/settings/hospital/match/chapter-5.html) motivates the comparison and discrepancy resolution workflow.
-- The seeded product alert is [WHO Medical Product Alert N°2/2025](https://www.who.int/vanuatu/news/detail-global/23-04-2025-medical-product-alert-n-2-2025--falsified-healmoxy-%28amoxicillin%29-capsules-500mg). The demo matches **HEALMOXY 500 mg, batch 023011** as a specific reported pack. This is a curated fixture, **not a live or exhaustive WHO query**. WHO product alerts are not a universal list of drugs suspended for all patients.
+- The seeded product alert is [WHO Medical Product Alert N°2/2025](https://cdn.who.int/media/docs/default-source/substandard-and-falsified/n2_2025_healmoxy_en.pdf?sfvrsn=d17da686_4). The demo matches **HEALMOXY 500 mg, batch 023011** as a specific reported pack; the fixture also includes the alert's other distinct printed batch identifiers, `H02605` and `H026051`. A batch match prompts pack verification and review; it does not prove an individual pack is falsified. This is a curated fixture, **not a live or exhaustive WHO query**. WHO product alerts are not a universal list of drugs suspended for all patients.
 - A patient's allergy record is checked separately from a product alert. A match means **review urgently**, not that the app has diagnosed a reaction or proved another medicine safe.
 - A UK deployment would also need current [MHRA medicine and device alerts](https://www.gov.uk/drug-device-alerts), [NHS dm+d](https://digital.nhs.uk/services/terminology-and-classifications/dm-d) terminology, validated clinical rules, authenticated reviewers, record integration, governance and secure delivery. These are **not implemented** in this prototype. The MHRA source is available for manual review; the app does not claim that it has checked it live.
 - [NHS guidance on hospital discharge](https://www.nhs.uk/nhs-services/hospitals/going-into-hospital/being-discharged-from-hospital/) informs the documented follow-up; [NHS guidance on secure email](https://digital.nhs.uk/services/nhsmail/guidance-for-sending-secure-email) illustrates why the demo's allowlisted SMTP is not a production clinical messaging system.
@@ -83,6 +83,6 @@ Exact text matching and one fictional case cannot establish clinical correctness
 
 ## neatHack evidence
 
-The [neatHack rules](https://neatlogs.com/hackathon) require neatlogs, Entire and cfo.ai. Neatlogs instrumentation is in `src/agent.js`; the `--failure` demo produces a recovery event. Entire project settings and Codex hooks are under `.entire/` and `.codex/`. The draft economics and evidence checklist are in `docs/`. The repository includes [verified hosted Lognac workflow traces](docs/NEATLOGS_EVIDENCE.md), [Entire graph output](docs/ENTIRE_GRAPH_EVIDENCE.md), a [screenshot of the actual cfo.ai business plan](docs/CFO_AI_EVIDENCE.md), and a [white product card for X](docs/social/lognac-neathack.png). The clean model-planned Neatlogs trace finalized successfully with 17 spans; the recovery trace separately records an intentional failed tool and completed application retry.
+The [neatHack rules](https://neatlogs.com/hackathon) require neatlogs, Entire and cfo.ai. Neatlogs instrumentation is in `src/agent.js`; the `--failure` demo produces a recovery event. Entire project settings and Codex hooks are under `.entire/` and `.codex/`. The draft economics and evidence checklist are in `docs/`. The repository includes [verified hosted Lognac workflow traces](docs/NEATLOGS_EVIDENCE.md), [Entire graph output](docs/ENTIRE_GRAPH_EVIDENCE.md), a [screenshot of the actual cfo.ai business plan](docs/CFO_AI_EVIDENCE.md), a [white product card for X](docs/social/lognac-neathack.png), and a [current demo-readiness audit](docs/DEMO_READINESS_AUDIT.md). The clean model-planned Neatlogs trace finalized successfully with 17 spans; the recovery trace separately records an intentional failed tool and completed application retry.
 
 Project owner and Git commit identity: **Afghanistan8**.

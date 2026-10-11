@@ -46,7 +46,7 @@ export function buildGraph(caseFile) {
       const current = stage === 'discharge' ? caseFile.dischargeOrders : caseFile.patientInstructions;
       for (const med of original) {
         const updated = current.find((item) => item.id === med.id);
-        if (updated && ['dose', 'route', 'frequency'].every((field) => updated[field] === med[field])) continue;
+        if (updated && ['name', 'ingredient', 'strength', 'dose', 'route', 'frequency', 'supplyDays', 'sourceId'].every((field) => updated[field] === med[field])) continue;
         add(`baseline:${stage}:${med.id}`, `${med.name} ${med.dose} · original`, 'superseded', { stage, sourceId: med.sourceId });
       }
     }
@@ -61,19 +61,28 @@ export function buildGraph(caseFile) {
     add(findingId, finding.title, finding.status === 'resolved' ? 'resolved' : 'finding', { sourceIds: finding.sourceIds });
     if (finding.type === 'instruction_mismatch' || finding.type === 'missing_instruction') {
       const medId = findingId.replace(/^INSTRUCTION-(?:MISSING|MISMATCH)-/, '');
-      link(`baseline:instruction:${medId}`, findingId, 'original draft');
-      link(`instruction:${medId}`, findingId, 'corrected draft');
+      const original = `baseline:instruction:${medId}`;
+      link(nodes.some((node) => node.id === original) ? original : `instruction:${medId}`, findingId, 'source draft');
+      if (nodes.some((node) => node.id === original)) link(`instruction:${medId}`, findingId, 'corrected draft');
     } else if (finding.type === 'extra_instruction') {
-      link(`baseline:instruction:${findingId.replace('EXTRA-INSTRUCTION-', '')}`, findingId, 'stray draft');
+      const medId = findingId.replace('EXTRA-INSTRUCTION-', '');
+      const original = `baseline:instruction:${medId}`;
+      link(nodes.some((node) => node.id === original) ? original : `instruction:${medId}`, findingId, 'stray draft');
     } else if (finding.type === 'allergy') {
       for (const allergy of caseFile.patient.allergies) link(allergy.id, findingId, 'allergy conflict');
-      link(`baseline:discharge:${findingId.replace('ALLERGY-', '')}`, findingId, 'original order');
+      const medId = findingId.replace('ALLERGY-', '');
+      const original = `baseline:discharge:${medId}`;
+      link(nodes.some((node) => node.id === original) ? original : `discharge:${medId}`, findingId, 'source order');
     } else if (finding.type === 'safety_alert') {
       for (const alert of caseFile.alerts) if (finding.sourceIds.includes(alert.id)) link(alert.id, findingId, 'specific product alert');
       for (const med of caseFile.homeMedications) if (findingId.startsWith(`ALERT-${med.id}-`)) link(`home:${med.id}`, findingId, 'reported pack');
     } else if (finding.type === 'supply_gap') {
-      link(`discharge:${findingId.replace('SUPPLY-', '')}`, findingId, 'supply');
+      const medId = findingId.replace('SUPPLY-', '');
+      const original = `baseline:discharge:${medId}`;
+      link(nodes.some((node) => node.id === original) ? original : `discharge:${medId}`, findingId, 'source supply');
       link('FOLLOWUP', findingId, 'review date');
+    } else if (finding.type === 'home_omission') {
+      link(`home:${findingId.replace('HOME-OMISSION-', '')}`, findingId, 'active home medicine');
     }
     const decision = caseFile.decisions[findingId];
     if (decision) {

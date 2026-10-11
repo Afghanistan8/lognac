@@ -38,7 +38,8 @@ console.log(JSON.stringify({
     failureCode: diagnostics.failureCode,
     retryable: diagnostics.retryable
   } : null,
-  spanCount: Array.isArray(spans) ? spans.length : null,
-  spanNames: Array.isArray(spans) ? spans.slice(0, 15).map((span) => span.name ?? span.spanName ?? null) : [],
+  spanCount: Array.isArray(spans) ? spans.length : data?.spanCount ?? null,
+  spanNames: Array.isArray(spans) ? spans.slice(0, 15).map((span) => span.name ?? span.spanName).filter(Boolean) : [],
   fieldNames: value && typeof value === 'object' ? Object.keys(value).slice(0, 12) : []
 }, null, 2));
+if (!response.ok) process.exitCode = 1;

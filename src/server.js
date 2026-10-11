@@ -100,7 +100,7 @@ async function deliverDueReminder() {
 }
 
 async function staticFile(res, pathname) {
-  const files = { '/': ['index.html', 'text/html'], '/styles.css': ['styles.css', 'text/css'], '/app.js': ['app.js', 'text/javascript'] };
+  const files = { '/': ['index.html', 'text/html'], '/styles.css': ['styles.css', 'text/css'], '/app.js': ['app.js', 'text/javascript'], '/favicon.svg': ['favicon.svg', 'image/svg+xml'] };
   const entry = files[pathname];
   if (!entry) return json(res, 404, { error: 'Not found.' });
   const bytes = await readFile(join(publicDir, entry[0]));
@@ -116,6 +116,16 @@ async function staticFile(res, pathname) {
 
 async function handler(req, res) {
   try {
+    const expectedHosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`]);
+    const expectedOrigins = new Set([`http://127.0.0.1:${port}`, `http://localhost:${port}`]);
+    if (!expectedHosts.has(req.headers.host)) return json(res, 403, { error: 'This local demo requires a localhost host header.' });
+    if (req.method === 'POST') {
+      const origin = req.headers.origin;
+      if (origin && !expectedOrigins.has(origin)) return json(res, 403, { error: 'Cross-origin changes are not allowed.' });
+      if (!req.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return json(res, 415, { error: 'Send application/json for demo changes.' });
+      }
+    }
     const url = new URL(req.url, `http://${host}:${port}`);
     if (req.method === 'GET' && url.pathname === '/api/case') return json(res, 200, await loadCase());
     if (req.method === 'GET' && url.pathname === '/api/graph') return json(res, 200, buildGraph(await loadCase()));

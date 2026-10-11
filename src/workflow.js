@@ -1,4 +1,4 @@
-import { assess, daysUntilFollowUp, replacementCandidates, verifyClosure } from './clinical.js';
+import { assess, daysUntilFollowUp, homeContinuationCandidate, replacementCandidates, verifyClosure } from './clinical.js';
 
 const now = () => new Date().toISOString();
 const copy = (value) => structuredClone(value);
@@ -53,6 +53,26 @@ export function applyDecision(caseFile, input) {
     }
     order.supplyDays = days;
     order.sourceId = sourceId;
+  } else if (input.action === 'confirm_discontinued') {
+    const homeId = selected.id.replace('HOME-OMISSION-', '');
+    const home = next.homeMedications.find((m) => m.id === homeId && m.status === 'active');
+    if (!home) throw new Error('The active home medicine is missing; rerun the review.');
+    home.status = 'discontinued-after-review';
+    home.reviewSourceId = sourceId;
+  } else if (input.action === 'restore_prior_order') {
+    const homeId = selected.id.replace('HOME-OMISSION-', '');
+    const previous = homeContinuationCandidate(next, homeId);
+    const required = daysUntilFollowUp(next);
+    const days = Number(input.supplyDays);
+    if (!previous || required === null || !Number.isInteger(days) || days < required || days > 365) {
+      throw new Error(`Select a matching prior hospital order and confirm at least ${required ?? 'the planned'} days of supply.`);
+    }
+    if (next.dischargeOrders.some((m) => m.id === previous.id) || next.patientInstructions.some((m) => m.id === previous.id)) {
+      throw new Error('The medicine already appears in a discharge draft; rerun the review.');
+    }
+    const restored = { ...previous, sourceId, ongoing: true, supplyDays: days };
+    next.dischargeOrders.push(restored);
+    next.patientInstructions.push({ ...restored });
   }
 
   const decision = { findingId: selected.id, action: input.action, note, reviewer, at: now(), sourceId };

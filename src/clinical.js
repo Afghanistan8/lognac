@@ -25,6 +25,17 @@ export function replacementCandidates(caseFile, unsafeId) {
   );
 }
 
+export function homeContinuationCandidate(caseFile, homeId) {
+  const home = caseFile.homeMedications.find((medicine) => medicine.id === homeId && medicine.status === 'active');
+  if (!home) return null;
+  const candidate = caseFile.hospitalOrders.find((medicine) => medicine.id === home.id && same(medicine.ingredient, home.ingredient));
+  if (!candidate) return null;
+  const allergic = caseFile.patient.allergies.some((allergy) => allergy.status === 'confirmed' &&
+    (same(allergy.ingredient, candidate.ingredient) || same(allergy.class, candidate.ingredient) ||
+     (allergy.class && candidate.class && same(allergy.class, candidate.class))));
+  return allergic ? null : candidate;
+}
+
 export function reconcile(caseFile) {
   const findings = [];
   const orders = new Map(caseFile.dischargeOrders.map((m) => [m.id, m]));
@@ -83,6 +94,18 @@ export function reconcile(caseFile) {
       actions: ['remove_unordered_instruction']
     });
   }
+  for (const home of caseFile.homeMedications) {
+    if (home.status !== 'active') continue;
+    if (caseFile.dischargeOrders.some((order) => same(order.ingredient, home.ingredient))) continue;
+    findings.push({
+      id: `HOME-OMISSION-${home.id}`, type: 'home_omission', severity: 'high',
+      title: `${home.name} is missing from discharge orders`,
+      detail: 'An active home medicine needs a documented decision to continue or discontinue it at discharge.',
+      sourceIds: [home.sourceId, 'DOC-DISCHARGE'], status: 'open',
+      actions: homeContinuationCandidate(caseFile, home.id)
+        ? ['confirm_discontinued', 'restore_prior_order'] : ['confirm_discontinued']
+    });
+  }
   return findings;
 }
 
@@ -92,7 +115,17 @@ export function checkAlerts(caseFile) {
     if (!['active', 'patient-reported'].includes(medicine.status)) continue;
     for (const alert of caseFile.alerts) {
       if (!same(alert.product, medicine.name) || !same(alert.strength, medicine.strength)) continue;
-      if (!medicine.batch || !alert.batches.includes(medicine.batch)) continue;
+      if (!medicine.batch) {
+        findings.push({
+          id: `ALERT-${medicine.id}-BATCH-UNKNOWN-${alert.id}`, type: 'safety_alert', severity: 'high',
+          title: `Reported ${medicine.name} pack needs batch verification`,
+          detail: 'The reported product appears in a curated WHO notice, but the recorded pack has no batch number. Confirm the physical pack and document a clinician decision before closing the review.',
+          sourceIds: [medicine.sourceId, alert.id], alertUrl: alert.url, status: 'open',
+          actions: ['record_not_in_use']
+        });
+        continue;
+      }
+      if (!alert.batches.includes(medicine.batch)) continue;
       findings.push({
         id: `ALERT-${medicine.id}-${alert.id}`, type: 'safety_alert', severity: 'critical',
         title: `Reported ${medicine.name} pack matches a WHO product alert`,
@@ -146,9 +179,19 @@ export function assess(caseFile) {
 
 export function verifyClosure(caseFile) {
   const reasons = [];
+  const knownSources = new Set([...caseFile.documents.map((doc) => doc.id), ...caseFile.alerts.map((alert) => alert.id)]);
   if (!caseFile.synthetic) reasons.push('Only fictional demo records are supported.');
   if (!caseFile.reviewer?.name) reasons.push('A named clinician review is required.');
   if (caseFile.findings.some((f) => f.status !== 'resolved')) reasons.push('Some findings have no documented decision.');
+  if (caseFile.findings.some((finding) => finding.status === 'resolved' &&
+    (!caseFile.decisions?.[finding.id] || !caseFile.documents.some((doc) => doc.id === caseFile.decisions[finding.id].sourceId)))) {
+    reasons.push('A resolved finding is missing its source-linked decision record.');
+  }
+  if (caseFile.findings.some((finding) => finding.sourceIds?.some((sourceId) => !knownSources.has(sourceId))) ||
+      [...caseFile.homeMedications, ...caseFile.hospitalOrders, ...caseFile.dischargeOrders, ...caseFile.patientInstructions]
+        .some((medicine) => !knownSources.has(medicine.sourceId))) {
+    reasons.push('A medicine or finding cites a source record that is missing from the case.');
+  }
   const residual = assess(caseFile);
   if (residual.length) reasons.push(`${residual.length} discrepancy or safety check(s) remain after review.`);
   if (!caseFile.followUp?.owner || !Number.isFinite(Date.parse(caseFile.followUp?.dueAt ?? ''))) {
