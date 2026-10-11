@@ -1,90 +1,99 @@
-"""Render a warm-white Lognac launch card from real demo screenshots."""
+"""Render a 4K editorial Lognac card from real synthetic-demo UI captures."""
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / 'docs' / 'social'
 OUT = ASSETS / 'lognac-neathack.png'
-W, H = 2400, 1350
-PAPER, WHITE, INK = '#F7F6F1', '#FFFFFF', '#121C1B'
-FOREST, MINT, SUBTLE, LINE = '#087C68', '#BCEFE1', '#5E6965', '#D5D9D1'
+W, H = 3840, 2160
+PAPER, WHITE, INK = '#FBFAF6', '#FFFFFF', '#111B19'
+GREEN, MINT, GREY, RULE = '#087C68', '#BCEFE1', '#52615B', '#D8DDD6'
 FONTS = Path(r'C:\Windows\Fonts')
 
-def font(size, heavy=False):
-    return ImageFont.truetype(str(FONTS / ('seguibl.ttf' if heavy else 'segoeui.ttf')), size)
+def face(size, bold=False):
+    return ImageFont.truetype(str(FONTS / ('seguibl.ttf' if bold else 'segoeui.ttf')), size)
 
-def put(x, y, value, size, color=INK, heavy=False):
-    d.text((x, y), value, font=font(size, heavy), fill=color)
+def write(x, y, value, size, color=INK, bold=False):
+    draw.text((x, y), value, font=face(size, bold), fill=color)
 
-def box(coords, fill=WHITE, radius=22, outline=INK, width=3):
-    d.rounded_rectangle(coords, radius=radius, fill=fill, outline=outline, width=width)
+def rect(bounds, fill=WHITE, radius=26, outline=INK, width=5):
+    draw.rounded_rectangle(bounds, radius=radius, fill=fill, outline=outline, width=width)
 
-def chip(x, y, value, width, dark=False):
-    box((x, y, x+width, y+55), fill=INK if dark else WHITE, radius=28)
-    bb = d.textbbox((0, 0), value, font=font(24, True))
-    put(x+(width-(bb[2]-bb[0]))//2, y+9, value, 24, WHITE if dark else INK, True)
+def pill(x, y, value, width, inverted=False):
+    rect((x,y,x+width,y+82),fill=INK if inverted else WHITE,radius=41,width=4)
+    bb=draw.textbbox((0,0),value,font=face(35,True))
+    write(x+(width-(bb[2]-bb[0]))//2,y+16,value,35,WHITE if inverted else INK,True)
 
-def browser(x, y, width, height, screenshot, url, crop=None):
-    d.rounded_rectangle((x+13,y+13,x+width+13,y+height+13), radius=24, fill=INK)
-    box((x,y,x+width,y+height), radius=22, width=4)
-    d.rounded_rectangle((x+3,y+3,x+width-3,y+60), radius=19, fill=PAPER)
-    d.rectangle((x+3,y+42,x+width-3,y+60), fill=PAPER)
-    d.line((x+2,y+60,x+width-2,y+60), fill=INK, width=3)
+def browser(x, y, w, h, image_name, label, crop):
+    draw.rounded_rectangle((x+18,y+18,x+w+18,y+h+18),radius=30,fill=INK)
+    rect((x,y,x+w,y+h),radius=30,width=5)
+    draw.rounded_rectangle((x+5,y+5,x+w-5,y+78),radius=25,fill=PAPER)
+    draw.rectangle((x+5,y+55,x+w-5,y+79),fill=PAPER)
+    draw.line((x+3,y+79,x+w-3,y+79),fill=INK,width=4)
     for i,c in enumerate(('#F48A77','#F8C95A','#72D3A8')):
-        d.ellipse((x+25+25*i,y+24,x+39+25*i,y+38), fill=c, outline=INK, width=2)
-    box((x+116,y+11,x+min(width-22,590),y+49), fill=WHITE, radius=19, outline=LINE, width=2)
-    put(x+137,y+17,url,18,SUBTLE)
-    shot = Image.open(ASSETS/screenshot).convert('RGB')
-    if crop: shot = shot.crop(crop)
-    shot = ImageOps.fit(shot,(width-8,height-65),method=Image.Resampling.LANCZOS,centering=(0.5,0))
-    im.paste(shot,(x+4,y+62))
-    d.line((x+3,y+height-2,x+width-3,y+height-2),fill=INK,width=4)
+        draw.ellipse((x+32+i*32,y+30,x+51+i*32,y+49),fill=c,outline=INK,width=3)
+    rect((x+150,y+14,x+min(w-40,950),y+63),fill=WHITE,radius=25,outline=RULE,width=3)
+    write(x+180,y+19,label,27,GREY)
+    source=Image.open(ASSETS/image_name).convert('RGB').crop(crop)
+    source=ImageOps.fit(source,(w-10,h-85),method=Image.Resampling.LANCZOS,centering=(0.5,0))
+    image.paste(source,(x+5,y+82))
+    draw.line((x+4,y+h-3,x+w-4,y+h-3),fill=INK,width=5)
 
-im = Image.new('RGB',(W,H),PAPER)
-d = ImageDraw.Draw(im)
-box((94,72,163,141),fill=MINT,radius=18)
-for dx,dy in ((0,-22),(16,-16),(22,0),(16,16),(0,22),(-16,16),(-22,0),(-16,-16)):
-    d.line((128,106,128+dx,106+dy),fill=FOREST,width=5)
-d.ellipse((123,101,133,111),fill=FOREST)
-put(182,75,'lognac.',47,INK,True)
-put(96,190,'Medication changes',86,INK,True)
-put(96,284,'need a paper trail.',86,FOREST,True)
-put(99,412,'An agent checks the discharge handoff for a fictional UK',31,SUBTLE)
-put(99,456,'patient. Every finding carries its source; a simulated clinician',31,SUBTLE)
-put(99,500,'records each decision before a written report is finalized.',31,SUBTLE)
-chip(97,602,'Written report first',260,True)
-chip(370,602,'Graph on demand',263)
-chip(646,602,'Synthetic UK demo',259)
+ASSETS.mkdir(parents=True,exist_ok=True)
+image=Image.new('RGB',(W,H),PAPER)
+draw=ImageDraw.Draw(image)
 
-box((96,705,997,1055),radius=30,width=4)
-put(128,732,'How Lognac works',38,INK,True)
-steps = [
-    (1,129,804,'Read the records','History, orders, instructions.'),
-    (2,553,804,'Find the gaps','Dose, allergy, batch, supply.'),
-    (3,129,924,'Record a decision','Clinician review is required.'),
-    (4,553,924,'Check the result','Written report + timed follow-up.'),
+# Clear hierarchy at both full resolution and social-feed size.
+rect((145,105,252,212),fill=MINT,radius=26,width=5)
+for dx,dy in ((0,-34),(24,-24),(34,0),(24,24),(0,34),(-24,24),(-34,0),(-24,-24)):
+    draw.line((199,159,199+dx,159+dy),fill=GREEN,width=8)
+draw.ellipse((191,151,207,167),fill=GREEN)
+write(282,108,'lognac.',78,INK,True)
+write(145,300,'Every medicine',125,INK,True)
+write(145,452,'change needs',125,INK,True)
+write(145,604,'a source trail.',125,GREEN,True)
+write(152,785,'Lognac checks a fictional discharge packet for dose,',44,GREY)
+write(152,849,'allergy, batch and supply gaps. A simulated clinician',44,GREY)
+write(152,913,'records decisions before the written report is finalized.',44,GREY)
+pill(150,1034,'Written report first',424,True)
+pill(595,1034,'Graph on demand',420)
+pill(1035,1034,'Synthetic UK demo',420)
+
+# Four-stage process card, with type large enough for an X image preview.
+rect((145,1190,1475,1718),radius=38,width=5)
+write(200,1225,'How Lognac works',58,INK,True)
+steps=[
+    (1,205,1340,'Read the sources','Home, hospital and discharge.'),
+    (2,855,1340,'Flag the gaps','Dose, allergy, batch and supply.'),
+    (3,205,1532,'Record decisions','A simulated clinician reviews each.'),
+    (4,855,1532,'Verify & follow up','Report, timestamp and reminder.'),
 ]
 for n,x,y,title,detail in steps:
-    d.ellipse((x,y,x+47,y+47),fill=MINT,outline=INK,width=3)
-    put(x+15,y+3,str(n),26,INK,True)
-    put(x+62,y-2,title,27,INK,True)
-    put(x+62,y+39,detail,21,SUBTLE)
+    draw.ellipse((x,y,x+72,y+72),fill=MINT,outline=INK,width=4)
+    write(x+24,y+10,str(n),40,INK,True)
+    write(x+90,y-3,title,42,INK,True)
+    write(x+90,y+65,detail,29,GREY)
 
-put(100,1094,'BUSINESS-PLAN SCENARIOS',20,FOREST,True)
-put(100,1125,'12-month ending cash',28,INK,True)
-for i,(label,cash,color) in enumerate([('Low',65040,'#87BDB3'),('Base',57840,FOREST),('High',72240,INK)]):
-    y=1169+i*48
-    put(103,y-5,label,23,INK,True)
-    d.rounded_rectangle((220,y,655,y+23),radius=11,fill='#E3E7E0')
-    d.rounded_rectangle((220,y,220+round(435*cash/80000),y+23),radius=11,fill=color)
-    put(682,y-7,f'£{cash:,.0f}',23,INK,True)
-put(101,1312,'Hypothetical site counts and prices · cfo.ai plan',18,SUBTLE)
+# Three scenario values copied from the saved, explicitly hypothetical cfo.ai plan.
+rect((145,1782,1475,2092),fill=WHITE,radius=34,width=5)
+write(198,1812,'cfo.ai plan  /  hypothetical',30,GREEN,True)
+write(198,1860,'12-month ending cash',47,INK,True)
+for i,(name,value,color) in enumerate((('Low',65040,'#91C7BC'),('Base',57840,GREEN),('High',72240,INK))):
+    y=1935+i*48
+    write(201,y-12,name,32,INK,True)
+    draw.rounded_rectangle((390,y,1005,y+25),radius=12,fill='#E7EBE6')
+    draw.rounded_rectangle((390,y,390+round(615*value/80000),y+25),radius=12,fill=color)
+    write(1055,y-14,f'£{value:,.0f}',32,INK,True)
 
-browser(1320,67,980,650,'ui-review.png','local Lognac demo / medication comparison')
-browser(1080,370,1165,665,'ui-graph.png','local Lognac demo / evidence graph')
-browser(1685,781,640,425,'ui-written-report.png','local Lognac demo / written report',crop=(265,100,1030,780))
-box((1100,1160,1635,1233),fill=INK,radius=20)
-put(1126,1174,'4 findings  →  4 decisions',31,WHITE,True)
-put(1129,1258,'Fictional case · simulated clinician · no clinical deployment',20,SUBTLE)
-im.save(OUT,optimize=True)
+# Real, high-DPI screenshots. The written report is the main visual.
+browser(1635,92,2070,1180,'ui-written-report.png','Lognac demo  /  written clinical review',(0,0,1462,790))
+browser(1565,1175,2140,820,'ui-graph.png','Lognac demo  /  evidence graph: dose discrepancy',(380,260,2280,910))
+rect((1760,1370,3000,1470),fill=WHITE,radius=22,outline=GREEN,width=4)
+write(1795,1386,'Amlodipine: 5 mg order  →  10 mg draft',43,INK,True)
+
+rect((1630,2025,2920,2112),fill=INK,radius=24,width=4)
+write(1672,2042,'4 findings  →  4 documented decisions',44,WHITE,True)
+write(2990,2051,'FICTIONAL CASE  ·  NO CLINICAL DEPLOYMENT',26,GREY,True)
+
+image.save(OUT,optimize=True)
 print(OUT)

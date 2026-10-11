@@ -2,7 +2,7 @@
 
 Attach [the white Lognac graphic](lognac-neathack.png) to the first post. These are build-in-public posts. The later official neatHack submission needs its own quote post and demo video.
 
-Suggested image alt text: “Warm-white Lognac launch card with real screenshots of the synthetic medication comparison, evidence graph and written report, plus a bar chart of three hypothetical cfo.ai cash scenarios.”
+Suggested image alt text: “White 4K Lognac launch card with real screenshots of a fictional patient’s written discharge review and a close-up evidence graph showing a 5 mg order against a 10 mg draft, plus a bar chart of three hypothetical cfo.ai cash scenarios.”
 
 **Post 1**
 
