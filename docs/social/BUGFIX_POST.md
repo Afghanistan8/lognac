@@ -2,6 +2,6 @@
 
 ![Planner-mode reporting bug and fix](04-planner-mode-bugfix.png)
 
-> Found and fixed a Lognac audit bug: if the model planner failed or chose an invalid tool, the agent used its local fallback but still reported “model-planned.” It now labels the path actually taken. Regression tests cover both failures; all 16 tests pass. #neatHack
+> Imagine going home with a new medicine list. I'm building Lognac to check it against your records and allergies. I found a bug: if AI planning failed, backup checks still ran, but the audit trail said “AI planned.” Fixed—reviewers now see which path actually ran. #neatHack
 
-Evidence: commit `0396e38` changed `src/agent.js` and added `test/agent.test.js`. The before/after code and all three outcomes in the image reflect that commit and the current test suite. Entire mapped the impacted callers in `docs/ENTIRE_GRAPH_EVIDENCE.md`. This is distinct from the separately simulated `checkAlerts` timeout shown in Neatlogs.
+Evidence: commit `0396e38` changed `src/agent.js` and added `test/agent.test.js`. The written-review screenshot is from a fictional UK case. The bug affected the run's audit-mode label; it did not change the medication findings or imply that a real patient received incorrect instructions. The validated local checks still ran. Entire mapped the impacted callers in `docs/ENTIRE_GRAPH_EVIDENCE.md`. This is distinct from the separately simulated `checkAlerts` timeout shown in Neatlogs.
