@@ -1,0 +1,50 @@
+[
+  {
+    "id": "01-problem",
+    "title": "The handover problem",
+    "image": "docs/social/01-lognac-problem.png",
+    "narration": "I'm building Lognac for a risky hospital handover. A patient's home list, hospital orders, discharge prescription and take-home instructions can disagree. A changed dose, allergy conflict or missing medicine needs to be found before the patient relies on the paperwork. This is a fictional UK demonstration."
+  },
+  {
+    "id": "02-review",
+    "title": "Written review and evidence graph",
+    "image": "docs/social/ui-written-report.png",
+    "narration": "The agent compares each source and writes a review with links to the records behind every finding. In the first synthetic case it flags a dose mismatch, an amoxicillin allergy conflict, a reported pack matching a curated WHO product notice, and a supply gap before follow-up. The written report is the main view. The graph is an optional way to follow medicines, evidence, findings and decisions."
+  },
+  {
+    "id": "03-gate",
+    "title": "Human decision, then verification",
+    "image": "docs/social/ui-graph.png",
+    "narration": "Lognac does not prescribe. A simulated clinician documents each decision. The agent then rechecks the drafts, produces a timestamped report and schedules a care-team reminder. A second fictional case also catches a home medicine omitted at discharge, an ordered medicine missing from the instructions and an extra instruction."
+  },
+  {
+    "id": "04-bug",
+    "title": "A missed dose change, fixed",
+    "image": "docs/social/04-dose-change-bugfix.png",
+    "narration": "I found a real detection bug in the prototype. The home and hospital records said amlodipine five milligrams. Both discharge documents said ten. Because those drafts agreed with each other, the first version reported zero findings. I added a home-to-discharge comparison and a regression test. Now Lognac flags the change, links both records and blocks finalization until a simulated clinician documents whether it was intended. If the reviewed dose or source changes later, the check reopens."
+  },
+  {
+    "id": "05-entire",
+    "title": "Entire: change impact",
+    "image": "docs/social/02-partner-tools.png",
+    "narration": "Entire's code graph mapped six callers, four callees and two data flows around the review function. I used it to inspect the browser, demos and tests affected by a planner-mode reporting fix. The current full test suite passes seventeen tests."
+  },
+  {
+    "id": "06-cfo",
+    "title": "cfo.ai: hypothetical plan",
+    "image": "docs/evidence/cfo-ai-lognac-plan.png",
+    "narration": "With cfo.ai I built a business plan with three hypothetical hospital-site scenarios, a twelve-month cash view and pricing, NHS procurement and clinical governance risks. Its base case assumes six sites, five thousand four hundred pounds of monthly revenue and seven thousand six hundred eighty pounds of monthly operating burn. Those are planning assumptions, not customers or validated prices."
+  },
+  {
+    "id": "07-neatlogs",
+    "title": "Neatlogs: failure and recovery",
+    "image": "docs/social/03-neatlogs-incident.png",
+    "narration": "Neatlogs showed the exact failed step in a simulated incident. I injected a timeout in the alert check. The trace marks checkAlerts as an error, then shows Lognac's immediate checkAlerts retry and the continuing review. The hosted recovery trace stays red because it preserves the failed span. I compared that with a separate clean success trace, so recovery was verified without hiding the failure. A later successful trace records the fixed dose-change workflow."
+  },
+  {
+    "id": "08-close",
+    "title": "What is ready",
+    "image": "docs/social/01-lognac-problem.png",
+    "narration": "Lognac remains a synthetic prototype. It does not make live prescribing decisions or claim complete drug-alert coverage. The source-linked report, optional graph, tests and trace evidence are ready to inspect."
+  }
+]

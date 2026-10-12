@@ -1,0 +1,50 @@
+[
+  {
+    "id": "01-problem",
+    "title": "Meet Lognac",
+    "image": "docs/social/01-lognac-problem.png",
+    "narration": "Hi, this is team Asuzu. I built Lognac. It's an agent for reviewing medicines at hospital discharge. It compares the patient's medication history, conditions and allergies with hospital orders, discharge prescriptions and take-home instructions. Its written report links each concern to a source. An optional graph shows the connections."
+  },
+  {
+    "id": "02-review",
+    "title": "Why it matters",
+    "image": "docs/social/ui-written-report.png",
+    "narration": "I built it because records can disagree as a patient goes home. A medicine may be missing, a dose may change without explanation, or instructions may conflict with an allergy. Lognac gathers the evidence and waits for a documented clinician decision."
+  },
+  {
+    "id": "03-graph",
+    "title": "Optional evidence graph",
+    "image": "docs/social/ui-graph.png",
+    "narration": "The optional graph shows those same source links."
+  },
+  {
+    "id": "04-bug",
+    "title": "A missed dose change, fixed",
+    "image": "docs/social/04-dose-change-bugfix.png",
+    "narration": "In a fictional case, home and hospital records said five milligrams of amlodipine; both discharge documents said ten. The first version missed it because those documents agreed. I fixed that comparison and added a test. Now Lognac flags the change and asks a clinician whether it was intended. It never chooses the dose."
+  },
+  {
+    "id": "05-entire",
+    "title": "Entire: change impact",
+    "image": "docs/social/02-partner-tools.png",
+    "narration": "Entire mapped Lognac's review function: its callers, dependencies and data flows. That helped me check what a change might affect. The full test suite now passes seventeen tests."
+  },
+  {
+    "id": "06-cfo",
+    "title": "cfo.ai: business plan",
+    "image": "docs/social/02-partner-tools.png",
+    "narration": "With cfo.ai, I built three hypothetical hospital-site scenarios, a twelve-month cash view, and a review of pricing, NHS procurement and clinical governance risks. These are assumptions, not sales or validated prices."
+  },
+  {
+    "id": "07-neatlogs",
+    "title": "Neatlogs: failure and recovery",
+    "image": "docs/social/03-neatlogs-incident.png",
+    "narration": "Neatlogs showed what happened inside an agent run. In a deliberate test, the medicine alert check timed out. Its trace shows the failed step, Lognac's retry and the review continuing. The trace stays red because it preserves that error. I compared it with a successful run and a later trace of the repaired dose-change workflow."
+  },
+  {
+    "id": "08-close",
+    "title": "What is ready",
+    "image": "docs/social/01-lognac-problem.png",
+    "narration": "Lognac uses fictional UK records. It helps clinicians review discrepancies. It does not prescribe."
+  }
+]

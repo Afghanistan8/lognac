@@ -2,6 +2,8 @@
 
 **A written-first, source-linked discharge medication review for a fictional UK patient.** Lognac follows a medicine from home history through hospital orders, draft discharge orders and patient instructions. It finds discrepancies, checks a specific WHO product/batch notice, asks a simulated clinician to document each decision, verifies the resulting drafts, then prepares a timestamped narrative and follow-up reminder. An optional evidence graph shows the same source trail.
 
+Watch the [1:59 demo](docs/demo/Lognac-under-two-minutes.mp4). It introduces Lognac, shows the written review and optional graph, explains a repaired dose-change detection bug, and covers Entire's code impact analysis, the hypothetical cfo.ai plan, and Neatlogs traces of a failed safety check followed by Lognac's retry. The earlier [2:42 cut](docs/demo/Lognac-submission-demo.mp4) remains available.
+
 This is a **synthetic hackathon prototype**. It is not for real patients, prescribing, emergency decisions or clinical deployment. The named reviewer field is a simulation, not authenticated clinical approval.
 
 ## Run locally
