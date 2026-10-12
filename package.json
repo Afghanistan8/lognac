@@ -7,6 +7,7 @@
     "start": "node src/server.js",
     "test": "node --test",
     "demo": "node src/demo.js",
+    "demo:second": "node src/secondDemo.js",
     "demo:http": "node src/httpDemo.js",
     "demo:minimal-trace": "node src/minimalTraceDemo.js"
   },

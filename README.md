@@ -19,9 +19,12 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000). The server binds to localho
 ```powershell
 npm run demo
 npm run demo -- --failure
+npm run demo:second
 ```
 
 The second command simulates one alert-source timeout, retries the required check and records recovery. With `NEATLOGS_API_KEY` configured, the terminal demo prints its exact trace ID and records the review, simulated decisions, final consistency gate and due-time reminder under one workflow trace. Verify that ID in Neatlogs; printing it does not prove hosted finalization. The browser's **Show failure recovery** button runs the same review path after reset. State is saved in `.local/case.json`, which is ignored by Git.
+
+`npm run demo:second` runs a distinct synthetic case: an active home medicine is missing from discharge orders, the ordered medicine is missing from patient instructions, and an unordered medicine appears in those instructions. It requires three simulated clinician decisions and writes the timestamped result to ignored `.local/second-case-evidence.json`. Its latest hosted [Neatlogs trace](https://app.neatlogs.com/traces/53f661538ef2f8efaceccee3a5d0670f?orgId=b25f84a0-5cac-4903-9546-23c190cb91dd&projectId=1fe23c4c-8166-4723-b508-1731c35ffaf7) read back as `success` with 16 spans, three LLM calls and three tool calls. This is another fictional workflow, not a clinically validated case.
 
 ## Walkthrough
 

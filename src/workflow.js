@@ -100,7 +100,9 @@ export function createReport(caseFile) {
     ...next.patient.conditions.map((c) => `• ${c.label} — ${c.status}; source ${c.sourceId}`),
     '',
     'RECORDED ALLERGIES',
-    ...next.patient.allergies.map((a) => `• ${a.ingredient}: ${a.reaction} (${a.status}); source ${a.sourceId}`),
+    ...(next.patient.allergies.length
+      ? next.patient.allergies.map((a) => `• ${a.ingredient}: ${a.reaction} (${a.status}); source ${a.sourceId}`)
+      : ['• None recorded in the fictional source data; this does not establish absence of allergies.']),
     '',
     'MEDICATION HISTORY AND INPATIENT RECORD',
     ...next.homeMedications.map((m) => `• Home: ${m.name} ${m.dose}, ${m.frequency}; ${m.status}; source ${m.sourceId}${m.batch ? `; batch ${m.batch}` : ''}`),
@@ -122,7 +124,7 @@ export function createReport(caseFile) {
     '',
     'VERIFICATION',
     `• ${assess(next).length} unresolved discrepancy checks after documented corrections.`,
-    '• Candidate alternatives came only from prior hospital orders for the same recorded condition; a simulated clinician selected the draft change.',
+    '• Any restored or replacement medicine was drawn from a linked prior hospital order; a simulated clinician selected the draft change.',
     '• Report is a synthetic workflow artifact, not a prescription or independent clinical advice.'
   ];
   next.report = { at, text: lines.join('\n'), approvedBy: next.reviewer.name, version: 1 };

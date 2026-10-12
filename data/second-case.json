@@ -1,0 +1,45 @@
+{
+  "id": "CASE-UK-002",
+  "synthetic": true,
+  "jurisdiction": "England, UK",
+  "patient": {
+    "id": "SYN-2081",
+    "name": "Daniel Mercer",
+    "age": 62,
+    "conditions": [
+      { "id": "C-HYP", "label": "Hypertension", "status": "active", "recordedAt": "2026-05-14T10:00:00Z", "sourceId": "DOC-HISTORY" },
+      { "id": "C-T2D", "label": "Type 2 diabetes", "status": "active", "recordedAt": "2024-02-07T10:00:00Z", "sourceId": "DOC-HISTORY" }
+    ],
+    "allergies": []
+  },
+  "documents": [
+    { "id": "DOC-HISTORY", "title": "Home medicine history", "kind": "history", "recordedAt": "2026-10-10T08:30:00Z", "excerpt": "Fictional record lists amlodipine and metformin as active home medicines." },
+    { "id": "DOC-HOSPITAL", "title": "Inpatient orders", "kind": "hospital", "recordedAt": "2026-10-10T11:00:00Z", "excerpt": "Fictional inpatient orders record amlodipine and metformin." },
+    { "id": "DOC-DISCHARGE", "title": "Draft discharge orders", "kind": "discharge", "recordedAt": "2026-10-11T09:00:00Z", "excerpt": "Only amlodipine appears in the draft discharge orders. No recorded decision about metformin." },
+    { "id": "DOC-INSTRUCTIONS", "title": "Draft patient instructions", "kind": "instructions", "recordedAt": "2026-10-11T09:10:00Z", "excerpt": "The amlodipine instruction is missing. An unrelated ibuprofen instruction appears without a discharge order." },
+    { "id": "DOC-CAREPLAN", "title": "Discharge care plan", "kind": "careplan", "recordedAt": "2026-10-11T09:20:00Z", "excerpt": "Medicines optimisation team to check the discharge plan on 25 October 2026 at 10:00 UK time." }
+  ],
+  "homeMedications": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "status": "active", "sourceId": "DOC-HISTORY" },
+    { "id": "M-METF", "name": "Metformin", "ingredient": "metformin", "strength": "500 mg", "dose": "500 mg", "route": "oral", "frequency": "twice daily", "status": "active", "sourceId": "DOC-HISTORY" }
+  ],
+  "hospitalOrders": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "indicationId": "C-HYP", "sourceId": "DOC-HOSPITAL" },
+    { "id": "M-METF", "name": "Metformin", "ingredient": "metformin", "strength": "500 mg", "dose": "500 mg", "route": "oral", "frequency": "twice daily", "indicationId": "C-T2D", "sourceId": "DOC-HOSPITAL" }
+  ],
+  "dischargeOrders": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "indicationId": "C-HYP", "ongoing": true, "supplyDays": 21, "sourceId": "DOC-DISCHARGE" }
+  ],
+  "patientInstructions": [
+    { "id": "M-IBU", "name": "Ibuprofen", "ingredient": "ibuprofen", "strength": "200 mg", "dose": "200 mg", "route": "oral", "frequency": "as drafted", "sourceId": "DOC-INSTRUCTIONS" }
+  ],
+  "followUp": { "owner": "Medicines optimisation team", "dueAt": "2026-10-25T10:00:00Z", "timeZone": "Europe/London", "sourceId": "DOC-CAREPLAN", "acknowledged": false },
+  "alerts": [],
+  "reviewer": null,
+  "decisions": {},
+  "findings": [],
+  "events": [],
+  "report": null,
+  "notification": null,
+  "phase": "new"
+}
