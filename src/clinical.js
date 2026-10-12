@@ -1,6 +1,7 @@
 // Clinical demo logic. This module never issues a prescription or changes a patient record.
 const clean = (value) => String(value ?? '').trim().toLowerCase();
 const same = (a, b) => clean(a) === clean(b);
+const regimenFields = ['strength', 'dose', 'route', 'frequency'];
 
 export function daysUntilFollowUp(caseFile) {
   const discharge = caseFile.documents.find((doc) => doc.id === 'DOC-DISCHARGE');
@@ -96,7 +97,25 @@ export function reconcile(caseFile) {
   }
   for (const home of caseFile.homeMedications) {
     if (home.status !== 'active') continue;
-    if (caseFile.dischargeOrders.some((order) => same(order.ingredient, home.ingredient))) continue;
+    const order = caseFile.dischargeOrders.find((item) => item.id === home.id && same(item.ingredient, home.ingredient)) ??
+      caseFile.dischargeOrders.find((item) => same(item.ingredient, home.ingredient));
+    if (order) {
+      if (regimenFields.every((field) => same(home[field], order[field]))) continue;
+      const id = `HOME-CHANGE-${home.id}`;
+      const decision = caseFile.decisions?.[id];
+      const reviewed = decision?.action === 'confirm_change' &&
+        [...regimenFields, 'sourceId', 'id'].every((field) => same(decision.reviewedHome?.[field], home[field]) &&
+          same(decision.reviewedDischarge?.[field], order[field]));
+      if (reviewed) continue;
+      findings.push({
+        id, type: 'home_regimen_change', severity: 'high',
+        title: `${home.name} changed between home history and discharge order`,
+        detail: `Home record: ${home.dose}, ${home.frequency}. Discharge draft: ${order.dose}, ${order.frequency}. A clinician must document whether this change is intended.`,
+        sourceIds: [home.sourceId, order.sourceId], orderId: order.id, status: 'open',
+        actions: ['confirm_change']
+      });
+      continue;
+    }
     findings.push({
       id: `HOME-OMISSION-${home.id}`, type: 'home_omission', severity: 'high',
       title: `${home.name} is missing from discharge orders`,

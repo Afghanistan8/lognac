@@ -12,7 +12,7 @@ These are one X post per card. They describe a synthetic prototype and verified 
 
 ![cfo.ai and Entire evidence](02-partner-tools.png)
 
-> cfo.ai helped model Lognac’s pricing, costs and 12-month runway across three hypothetical cases. Entire mapped the code affected by a planner fix, so I could target the right tests. Those numbers are assumptions, not sales; the codebase now passes 16 tests. #neatHack
+> cfo.ai helped model Lognac’s pricing, costs and 12-month runway across three hypothetical cases. Entire mapped the code affected by a planner fix, so I could target the right tests. Those numbers are assumptions, not sales; the codebase now passes 17 tests. #neatHack
 
 ## 3 — Neatlogs recovery evidence
 

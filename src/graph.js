@@ -83,6 +83,10 @@ export function buildGraph(caseFile) {
       link('FOLLOWUP', findingId, 'review date');
     } else if (finding.type === 'home_omission') {
       link(`home:${findingId.replace('HOME-OMISSION-', '')}`, findingId, 'active home medicine');
+    } else if (finding.type === 'home_regimen_change') {
+      const medId = findingId.replace('HOME-CHANGE-', '');
+      link(`home:${medId}`, findingId, 'home regimen');
+      link(`discharge:${finding.orderId ?? medId}`, findingId, 'changed discharge regimen');
     }
     const decision = caseFile.decisions[findingId];
     if (decision) {

@@ -14,6 +14,7 @@ export function applyDecision(caseFile, input) {
   const next = copy(caseFile);
   const selected = next.findings.find((item) => item.id === input.findingId);
   const sourceId = `DECISION-${selected.id}`;
+  let reviewedRegimens;
 
   if (input.action === 'align_to_order') {
     const medId = selected.id.replace(/^INSTRUCTION-(?:MISSING|MISMATCH)-/, '');
@@ -73,9 +74,20 @@ export function applyDecision(caseFile, input) {
     const restored = { ...previous, sourceId, ongoing: true, supplyDays: days };
     next.dischargeOrders.push(restored);
     next.patientInstructions.push({ ...restored });
+  } else if (input.action === 'confirm_change') {
+    const homeId = selected.id.replace('HOME-CHANGE-', '');
+    const home = next.homeMedications.find((m) => m.id === homeId && m.status === 'active');
+    const order = next.dischargeOrders.find((m) => m.id === selected.orderId &&
+      m.ingredient?.trim().toLowerCase() === home?.ingredient?.trim().toLowerCase());
+    if (!home || !order) throw new Error('The source medicine or discharge order changed; rerun the review.');
+    const fields = ['strength', 'dose', 'route', 'frequency', 'sourceId', 'id'];
+    reviewedRegimens = {
+      reviewedHome: Object.fromEntries(fields.map((field) => [field, home[field]])),
+      reviewedDischarge: Object.fromEntries(fields.map((field) => [field, order[field]]))
+    };
   }
 
-  const decision = { findingId: selected.id, action: input.action, note, reviewer, at: now(), sourceId };
+  const decision = { findingId: selected.id, action: input.action, note, reviewer, at: now(), sourceId, ...reviewedRegimens };
   next.decisions[selected.id] = decision;
   next.reviewer = { name: reviewer, mode: 'simulated-clinician', lastReviewedAt: decision.at };
   next.documents.push({ id: sourceId, title: 'Simulated clinician decision', kind: 'decision', recordedAt: decision.at, excerpt: note });

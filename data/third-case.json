@@ -1,0 +1,42 @@
+{
+  "id": "CASE-UK-003",
+  "synthetic": true,
+  "jurisdiction": "England, UK",
+  "patient": {
+    "id": "SYN-3095",
+    "name": "Leah Morgan",
+    "age": 55,
+    "conditions": [
+      { "id": "C-HYP", "label": "Hypertension", "status": "active", "recordedAt": "2026-08-04T09:00:00Z", "sourceId": "DOC-HISTORY" }
+    ],
+    "allergies": []
+  },
+  "documents": [
+    { "id": "DOC-HISTORY", "title": "Home medicine history", "kind": "history", "recordedAt": "2026-10-10T08:30:00Z", "excerpt": "Fictional home record: amlodipine 5 mg once daily." },
+    { "id": "DOC-HOSPITAL", "title": "Inpatient orders", "kind": "hospital", "recordedAt": "2026-10-10T11:00:00Z", "excerpt": "Fictional inpatient order: amlodipine 5 mg once daily." },
+    { "id": "DOC-DISCHARGE", "title": "Draft discharge orders", "kind": "discharge", "recordedAt": "2026-10-11T09:00:00Z", "excerpt": "Draft discharge order: amlodipine 10 mg once daily. No change decision is recorded." },
+    { "id": "DOC-INSTRUCTIONS", "title": "Draft patient instructions", "kind": "instructions", "recordedAt": "2026-10-11T09:10:00Z", "excerpt": "Draft patient instruction: amlodipine 10 mg once daily." },
+    { "id": "DOC-CAREPLAN", "title": "Discharge care plan", "kind": "careplan", "recordedAt": "2026-10-11T09:20:00Z", "excerpt": "Fictional medicines team review due 25 October 2026 at 10:00 UK time." }
+  ],
+  "homeMedications": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "status": "active", "sourceId": "DOC-HISTORY" }
+  ],
+  "hospitalOrders": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "5 mg", "dose": "5 mg", "route": "oral", "frequency": "once daily", "indicationId": "C-HYP", "sourceId": "DOC-HOSPITAL" }
+  ],
+  "dischargeOrders": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "10 mg", "dose": "10 mg", "route": "oral", "frequency": "once daily", "indicationId": "C-HYP", "ongoing": true, "supplyDays": 21, "sourceId": "DOC-DISCHARGE" }
+  ],
+  "patientInstructions": [
+    { "id": "M-AMLO", "name": "Amlodipine", "ingredient": "amlodipine", "strength": "10 mg", "dose": "10 mg", "route": "oral", "frequency": "once daily", "sourceId": "DOC-INSTRUCTIONS" }
+  ],
+  "followUp": { "owner": "Medicines optimisation team", "dueAt": "2026-10-25T10:00:00Z", "timeZone": "Europe/London", "sourceId": "DOC-CAREPLAN", "acknowledged": false },
+  "alerts": [],
+  "reviewer": null,
+  "decisions": {},
+  "findings": [],
+  "events": [],
+  "report": null,
+  "notification": null,
+  "phase": "new"
+}
